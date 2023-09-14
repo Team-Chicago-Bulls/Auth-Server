@@ -1,4 +1,4 @@
-package database
+package model_base
 
 import (
 	"database/sql"

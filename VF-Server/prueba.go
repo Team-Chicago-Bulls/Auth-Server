@@ -1,9 +1,5 @@
 package main
 
-import "vf-server/database"
+func main_x() {
 
-func main() {
-	cre := database.NewThing()
-	//"usuario:contraseña@tcp(hostname:puerto)/basededatos"
-	print(cre.Ip)
 }

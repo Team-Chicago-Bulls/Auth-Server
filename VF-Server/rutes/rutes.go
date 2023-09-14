@@ -1,19 +1,18 @@
 package rutes
 
 import (
-	"vf-server/database"
+	"vf-server/database/deployment"
+	"vf-server/database/model_base"
 
 	"github.com/gin-gonic/gin"
 )
 
 type Rutes struct {
-	DB *database.DB
+	DB *model_base.DB
 }
 
 func NewRutes() (*Rutes, error) {
-	cre := database.NewThing()
-	print(cre.Ip)
-	db := database.NewDB("sdads")
+	db := deployment.NewThing()
 	return &Rutes{DB: db}, nil
 }
 
@@ -21,6 +20,7 @@ func (r *Rutes) Prueba(c *gin.Context) {
 	c.JSON(200, "Especatacular")
 }
 
+// Registrar usuario
 func (r *Rutes) Enviar_data(c *gin.Context) {
 	var datos map[string]interface{}
 	if err := c.ShouldBindJSON(&datos); err != nil {

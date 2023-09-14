@@ -8,7 +8,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func main_x() {
+func main() {
 	r := gin.Default()
 	godotenv.Load(".env")
 	enn, err := rutes.NewRutes()
