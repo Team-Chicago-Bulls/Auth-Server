@@ -1,0 +1,8 @@
+host: localhost:1022
+info:
+  contact: {}
+  description: Descripción del funcionamiento de la API respecto al servidor de autentificación
+  title: Auth-Server API
+  version: "0.1"
+paths: {}
+swagger: "2.0"
