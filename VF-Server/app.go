@@ -16,6 +16,13 @@ func main() {
 		println("No se logro la conexión con la BD")
 		return
 	}
+	// Ruta de ejemplo con comentario Swagger
+	// @Summary Obtiene la lista de elementos
+	// @Description Obtiene la lista de elementos
+	// @Tags elementos
+	// @Produce json
+	// @Success 200 {array} string "Lista de elementos"
+	// @Router /elementos [get]
 	r.GET("/", enn.Prueba)
 	r.POST("/user/enviar_data", enn.Enviar_data)
 
