@@ -1,4 +1,4 @@
-package database
+package database_model
 
 import (
 	"database/sql"
@@ -22,7 +22,6 @@ func (db *DB) Connect() (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	err = database.Ping()
 	if err != nil {
 		return nil, err
