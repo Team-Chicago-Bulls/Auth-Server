@@ -1,8 +1,8 @@
 package token
 
 import (
+	"auth-server/models"
 	"os"
-	"vf-server/models"
 
 	"github.com/joho/godotenv"
 )

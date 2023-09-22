@@ -1,7 +1,7 @@
 package modelpackage
 
 import (
-	Rutes "vf-server/rutes"
+	"auth-server/Rutes"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,7 +14,8 @@ func NewRutes() (*Funcions, error) {
 	r := gin.Default()
 
 	r.GET("/", Rutes.Prueba)
-	r.POST("/user/enviar_data", Rutes.Registrar_Usuario)
+	r.POST("/user/register_user", Rutes.Registrar_Usuario)
+	r.POST("/user/log_user", Rutes.Validar_usuario)
 
 	return &Funcions{Router: r}, nil
 }

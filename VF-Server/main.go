@@ -1,8 +1,8 @@
 package main
 
 import (
+	modelpackage "auth-server/Rutes/ModelPackage"
 	"os"
-	modelpackage "vf-server/Rutes/ModelPackage"
 
 	"github.com/joho/godotenv"
 )
@@ -10,7 +10,7 @@ import (
 // @title Auth-Server API
 // @version 0.1
 // @description Descripción del funcionamiento de la API respecto al servidor de autentificación
-// @host localhost:1022
+// @host localhost:8050
 func main() {
 	godotenv.Load(".env")
 	enn, err := modelpackage.NewRutes()
@@ -18,7 +18,6 @@ func main() {
 		println(err)
 		return
 	}
-
 	r := enn.Router
 	r.Run(":" + os.Getenv("PORT"))
 }

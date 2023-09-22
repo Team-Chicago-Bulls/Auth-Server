@@ -3,12 +3,17 @@ package models
 import "github.com/golang-jwt/jwt"
 
 type User struct {
-	Email    string `json:"Email"`
-	Password string `json:"Password"`
+	Email string `json:"email"`
 	jwt.StandardClaims
 }
 
-func user_build() *User {
-	user := new(User)
-	return user
+func User_build(email string) *User {
+	temp := new(User)
+	temp.Email = email
+	claims := jwt.StandardClaims{
+		ExpiresAt: 15000,
+	}
+	temp.StandardClaims = claims
+	return temp
+
 }
