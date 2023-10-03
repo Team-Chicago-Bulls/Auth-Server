@@ -2,10 +2,10 @@ FROM golang:latest
 
 WORKDIR /app
 
-COPY ./VF-Server /app
+COPY . .
 
-RUN go build -o Auth-Server
+RUN go build -o server .
 
 EXPOSE 8080
 
-CMD ["./Auth-Server"]
+CMD ["/app/server"]
