@@ -1,6 +1,10 @@
 package models
 
-import "github.com/golang-jwt/jwt"
+import (
+	"time"
+
+	"github.com/golang-jwt/jwt"
+)
 
 type User struct {
 	Email string `json:"email"`
@@ -8,12 +12,10 @@ type User struct {
 }
 
 func User_build(email string) *User {
-	temp := new(User)
-	temp.Email = email
-	claims := jwt.StandardClaims{
-		ExpiresAt: 15000,
+	user := &User{
+		Email: email,
 	}
-	temp.StandardClaims = claims
-	return temp
+	user.ExpiresAt = time.Now().Add(time.Hour * 48).Unix()
+	return user
 
 }
