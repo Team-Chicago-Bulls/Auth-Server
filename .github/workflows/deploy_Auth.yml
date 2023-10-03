@@ -24,10 +24,10 @@ jobs:
     - name: Build container
       run: |
         if [[ -z $(docker ps -a -q -f name=backpy) ]]; then
-          docker build -t backpy -f backend.Dockerfile .
+          docker build -t backpy -f auth.Dockerfile .
         else
           docker stop backpy && docker rm backpy && docker rmi backpy
-          docker build -t backpy -f backend.Dockerfile .
+          docker build -t backpy -f auth.Dockerfile .
         fi
     - name: Run
       run: ./run.sh
