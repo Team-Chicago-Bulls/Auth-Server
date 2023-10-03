@@ -6,6 +6,6 @@ COPY ./VF-Server /app
 
 RUN go build -o Auth-Server
 
-EXPOSE 8080
+EXPOSE 8050
 
 CMD ["./Auth-Server"]
