@@ -3,7 +3,6 @@ package Rutes
 import (
 	"auth-server/database/deployment"
 	"auth-server/models"
-	"encoding/hex"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -17,7 +16,7 @@ func Registrar_Usuario(c *gin.Context) {
 	db := deployment.NewThing()
 	connect, err := db.Connect()
 	if err != nil {
-		print(err)
+		panic(err)
 	} else {
 		var datos map[string]interface{}
 		if err := c.ShouldBindJSON(&datos); err != nil {
@@ -33,7 +32,7 @@ func Registrar_Usuario(c *gin.Context) {
 			return
 		}
 
-		query := "SELECT COUNT(*) AS contador FROM USER WHERE EMAIL = ?"
+		query := "SELECT COUNT(*) AS contador FROM user WHERE EMAIL = ?"
 		rows, err := connect.Query(query, email_data)
 		if err != nil {
 			panic(err.Error())
@@ -60,20 +59,16 @@ func Registrar_Usuario(c *gin.Context) {
 						panic(error2.Error())
 					} else {
 						godotenv.Load(".env")
-						key_hex := os.Getenv("LLAVE_SECRETA")
-						key_bin, err_key := hex.DecodeString(key_hex)
-						if err_key != nil {
-							panic(err_key.Error())
+						key_hex := []byte(os.Getenv("LLAVE_SECRETA"))
+						token_model := models.User_build(email_data)
+						token := jwt.NewWithClaims(jwt.SigningMethodHS256, token_model)
+						final_token, err_token := token.SignedString(key_hex)
+						if err_token != nil {
+							panic(err_token.Error())
 						} else {
-							token_model := models.User_build(email_data)
-							token := jwt.NewWithClaims(jwt.SigningMethodHS256, token_model)
-							final_token, err_token := token.SignedString(key_bin)
-							if err_token != nil {
-								panic(err_token.Error())
-							} else {
-								c.JSON(200, final_token)
-							}
+							c.JSON(200, final_token)
 						}
+
 					}
 					defer insert.Close()
 				}

@@ -3,7 +3,7 @@ package Rutes
 import (
 	"auth-server/database/deployment"
 	"auth-server/models"
-	"encoding/hex"
+	"fmt"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -34,7 +34,7 @@ func Validar_usuario(c *gin.Context) {
 			return
 		}
 
-		query := "SELECT * FROM USER WHERE EMAIL = ?"
+		query := "SELECT * FROM user WHERE EMAIL = ?"
 		rows, err := connect.Query(query, email_data)
 		if err != nil {
 			panic(err.Error())
@@ -54,22 +54,18 @@ func Validar_usuario(c *gin.Context) {
 				erro_has := bcrypt.CompareHashAndPassword([]byte(password), []byte(password_data))
 				if email_data == email && erro_has == nil {
 					godotenv.Load(".env")
-					key_hex := os.Getenv("LLAVE_SECRETA")
-					key_bin, err_key := hex.DecodeString(key_hex)
-					if err_key != nil {
-						panic(err_key.Error())
-					} else {
-						token_model := models.User_build(email_data)
-						token := jwt.NewWithClaims(jwt.SigningMethodHS256, token_model)
-						final_token, err_token := token.SignedString(key_bin)
-						if err_token != nil {
-							panic(err_token.Error())
-						} else {
-							c.JSON(202, final_token)
-						}
+					key_hex := []byte(os.Getenv("LLAVE_SECRETA"))
+					fmt.Println(key_hex)
+					token_model := models.User_build(email_data)
+					token := jwt.NewWithClaims(jwt.SigningMethodHS256, token_model)
+					final_token, err_token := token.SignedString(key_hex)
+					if err_token != nil {
+						c.JSON(500, gin.H{"error": err_token.Error()})
+						return
 					}
+					c.JSON(202, final_token)
 				} else {
-					c.JSON(204, "Las contraseñas no coinciden")
+					c.JSON(408, "Las contraseñas no coinciden")
 				}
 			}
 		}
