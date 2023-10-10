@@ -12,8 +12,6 @@ services:
       - MYSQL_PASSWORD=admin*
     volumes:
       - /home/distribuidos4/db:/var/lib/mysql
-    ports: 
-      - 1025:3306
     networks:
       my_network:
         aliases:
