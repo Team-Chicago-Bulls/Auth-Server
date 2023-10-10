@@ -10,6 +10,8 @@ services:
       - MYSQL_DATABASE=auth
       - MYSQL_USER=api
       - MYSQL_PASSWORD=admin*
+    volumes:
+      - /home/distribuidos4/db:/var/lib/mysql
     ports: 
       - 1025:3306
     networks:
@@ -38,3 +40,6 @@ networks:
     name: my_network
     ipam:
       driver: default
+
+volumes:
+  db: {}
