@@ -1,20 +1,6 @@
 version: "3"
 services:
-  api:
-    build: 
-      context: .
-      dockerfile: Dockerfile
-    container_name: "backpy"
-  ports:
-    - "80:8050"
-  depends_on:
-    - db
-  restart: unless-stopped
-  networks:
-    my_network:
-      aliases:
-        - api_host
-  
+
   db: 
     image: mariadb
     container_name: "db"
@@ -31,6 +17,21 @@ services:
       my_network:
         aliases:
           - db_host
+
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: "backpy"
+  ports:
+    - "80:8050"
+  depends_on:
+    - db
+  restart: unless-stopped
+  networks:
+    my_network:
+      aliases:
+        - api_host
 
 
 
