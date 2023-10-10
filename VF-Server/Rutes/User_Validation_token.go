@@ -3,7 +3,6 @@ package Rutes
 import (
 	"auth-server/database/deployment"
 	"fmt"
-	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -15,48 +14,52 @@ import (
 func Validar_usuario_token(c *gin.Context) {
 	db := deployment.NewThing()
 	connect, err := db.Connect()
-
 	tokenString := string(c.Param("token"))
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Método de firma no válido: %v", token.Header["alg"])
+			c.JSON(400,"Firma no valida")
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 		}
 		godotenv.Load(".env")
 		key_hex := []byte(os.Getenv("LLAVE_SECRETA"))
-		fmt.Println(key_hex)
 		return key_hex, nil
 
 	})
 
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		c.JSON(400,gin.H{"error": err.Error()})
 		return
 	} else {
-		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-			query := "SELECT COUNT(*) AS contador FROM user WHERE EMAIL = ?"
-			rows, err := connect.Query(query, claims["email"])
-			if err != nil {
-				panic(err.Error())
+		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {		
+			query := "SELECT COUNT(*) AS contador FROM user WHERE id = ?"
+			rows, rows_error := connect.Query(query, claims["sub"])
+			if rows_error != nil {
+				c.JSON(400,gin.H{"error": rows_error.Error()})
+				return
 			}
 			var (
 				contador int
 			)
 			defer rows.Close()
 			for rows.Next() {
-				err := rows.Scan(&contador)
-				if err != nil {
-					panic(err.Error())
+				err_search := rows.Scan(&contador)
+				if err_search != nil {
+					c.JSON(400,gin.H{"error": err_search.Error()})
+					return
 				} else {
 					if contador == 1 {
-						c.JSON(202, "yes")
+						c.JSON(200,"Token Valido")
+						return
 					} else {
-						c.JSON(200, "no")
+						c.JSON(400,gin.H{"error": rows_error.Error()})
+						return
 					}
 				}
 			}
-		} else {
-			fmt.Println(err)
+		}else{
+			c.JSON(400,gin.H{"error": err.Error()})
+			return
 		}
-	}
-
+	} 
 }
+

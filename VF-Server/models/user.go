@@ -7,15 +7,16 @@ import (
 )
 
 type User struct {
-	Email string `json:"email"`
+	id string `json:"id"`
 	jwt.StandardClaims
 }
 
-func User_build(email string) *User {
-	user := &User{
-		Email: email,
+func User_build(id_param string) *User {
+	user := &User{}
+	user.StandardClaims = jwt.StandardClaims{
+		Subject:   id_param,
+		ExpiresAt: time.Now().Add(time.Hour * 48).Unix(),
 	}
-	user.ExpiresAt = time.Now().Add(time.Hour * 48).Unix()
 	return user
-
 }
+
