@@ -23,7 +23,7 @@ jobs:
         chmod 777 run.sh
     - name: stop docker
       run: |
-        docker compose down
+        docker compose down --rmi all --remove-orphans
     
     #- name: Build container
     #  run: |
