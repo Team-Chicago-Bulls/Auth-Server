@@ -1,8 +1,7 @@
 version: "3"
 services:
   
-  
-  db: 
+  db:
     image: mariadb
     container_name: "db"
     restart: always
@@ -24,18 +23,18 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: "backpy"
-  ports:
-    - 80:8050
   
   restart: unless-stopped
   networks:
     my_network:
       aliases:
         - api_host
+  
+  ports:
+    - 80:8050
+
   depends_on:
     - db
-
-
 
 networks:
   my_network:
@@ -43,3 +42,6 @@ networks:
     name: my_network
     ipam:
       driver: default
+
+volumes:
+  db: {}
