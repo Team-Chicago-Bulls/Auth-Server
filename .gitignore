@@ -3,12 +3,12 @@ README.MD
 
 # Go env
 Dockerfile
-.env
 
-/VF-Server/go.mod
-/VF-Server/go.sum
+VF-Server/.env
+VF-Server/docs/
+VF-Server/go.mod
+VF-Server/go.sum
 
 # Go workspaces file
-
-/VF-Server/main.go
+VF-Server/main.go
 
