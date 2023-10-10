@@ -13,7 +13,7 @@ type Funcions struct {
 func NewRutes() (*Funcions, error) {
 	r := gin.Default()
 
-	r.GET("/", Rutes.Prueba)
+	r.GET("/user/prueba",Rutes.Prueba)
 	r.POST("/user/register_user", Rutes.Registrar_Usuario)
 	r.POST("/user/log_user", Rutes.Validar_usuario)
 	r.GET("/user/log_user_token/:token", Rutes.Validar_usuario_token)
