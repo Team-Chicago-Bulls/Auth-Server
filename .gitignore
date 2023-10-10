@@ -1,14 +1,14 @@
+#Ignore README file
 README.md
-.gitignore
-
-# Go env
 Dockerfile
 
-VF-Server/.env
-VF-Server/docs/
-VF-Server/go.mod
-VF-Server/go.sum
+# Go files
 
-# Go workspaces file
-VF-Server/main.go
+/VF-Server/.env
+/VF-Server/docs/
+/VF-Server/go.mod
+/VF-Server/go.sum
+
+# Go workspace files
+/VF-Server/main.go
 
