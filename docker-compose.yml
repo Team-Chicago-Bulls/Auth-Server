@@ -1,0 +1,42 @@
+version: "3"
+services:
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: "backpy"
+  ports:
+    - "80:8050"
+  depends_on:
+    - db
+  restart: unless-stopped
+  networks:
+    my_network:
+      aliases:
+        - api_host
+  
+  db: 
+    image: mariadb
+    container_name: "db"
+    restart: always
+    environment: 
+      - MYSQL_ROOT_PASSWORD=admin*
+      - MYSQL_DATABASE=auth
+      - MYSQL_USER=api
+      - MYSQL_PASSWORD=admin*
+      - MYSQL_PORT=1025
+    volumes:
+      - ./db:/var/lib/mysql
+    networks:
+      my_network:
+        aliases:
+          - db_host
+
+
+
+networks:
+  my_network:
+    driver: bridge
+    name: my_network
+    ipam:
+      driver: default
