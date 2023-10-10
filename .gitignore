@@ -1,2 +1,11 @@
-# Go envs
-*README.md
+# Go env
+Dockerfile
+.env
+
+/VF-Server/go.mod
+/VF-Server/go.sum
+
+# Go workspace file
+/VF-Server/go.mod
+/VF-Server/main.go
+
