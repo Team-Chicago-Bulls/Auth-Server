@@ -22,7 +22,7 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
-    container_name: "backpy"
+    container_name: "api"
     restart: unless-stopped
     networks:
       my_network:
