@@ -25,11 +25,12 @@ func Registrar_Usuario(c *gin.Context) {
 			c.JSON(400, gin.H{"error": err_capture.Error()})
 			return
 		}
-
+		
 		email_data, ok1 := datos["correo"].(string)
 		password_data, ok2 := datos["contrasena"].(string)
-
-		if !ok1 || !ok2 {
+		id_data, ok3 := datos["id"].(string)
+		
+		if !ok1 || !ok2 || !ok3  {
 			c.JSON(400, gin.H{"error": "Los campos no son del tipo esperado"})
 			return
 		}
@@ -58,8 +59,8 @@ func Registrar_Usuario(c *gin.Context) {
 					c.JSON(400, gin.H{"error": err_hasheo.Error()})
 					return
 				} else {
-					query_insert := "INSERT INTO user(email,Password_user) VALUES (?,?)"
-					insert, error_insert_query := connect.Query(query_insert, email_data, hash)
+					query_insert := "INSERT INTO user(id,email,Password_user) VALUES (?,?,?)"
+					insert, error_insert_query := connect.Query(query_insert, id_data ,email_data, hash)
 					if error_insert_query != nil {
 						c.JSON(400, gin.H{"error": error_insert_query.Error()})
 						return
