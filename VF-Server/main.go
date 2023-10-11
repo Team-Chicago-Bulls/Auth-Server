@@ -18,6 +18,7 @@ func main() {
 		println(err)
 		return
 	}
+	gin.SetMode(gin.ReleaseMode)
 	r := enn.Router
 	r.Run(":" + os.Getenv("PORT"))
 }
