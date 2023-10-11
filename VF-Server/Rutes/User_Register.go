@@ -4,8 +4,7 @@ import (
 	"auth-server/database/deployment"
 	"auth-server/models"
 	"os"
-	"strconv"
-	"fmt"
+
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/golang-jwt/jwt"
@@ -25,19 +24,18 @@ func Registrar_Usuario(c *gin.Context) {
 			c.JSON(400, gin.H{"error": err_capture.Error()})
 			return
 		}
-		
+
+		id_email, ok3 := datos["id"].(string)
 		email_data, ok1 := datos["correo"].(string)
 		password_data, ok2 := datos["contrasena"].(string)
-		id_data, ok3 := datos["id"].(string)
-		fmt.Println("ID:", id_data)
-		
-		if !ok1 || !ok2 || !ok3  {
+
+		if !ok1 || !ok2 || !ok3 {
 			c.JSON(400, gin.H{"error": "Los campos no son del tipo esperado"})
 			return
 		}
 
-		query := "SELECT COUNT(*) AS contador FROM user WHERE EMAIL = ?"
-		rows, err_cont_select := connect.Query(query, email_data)
+		query := "SELECT COUNT(*) AS contador FROM user WHERE id = ?"
+		rows, err_cont_select := connect.Query(query, id_email)
 		if err_cont_select != nil {
 			c.JSON(400, gin.H{"error": err_cont_select.Error()})
 			return
@@ -61,26 +59,26 @@ func Registrar_Usuario(c *gin.Context) {
 					return
 				} else {
 					query_insert := "INSERT INTO user(id,email,Password_user) VALUES (?,?,?)"
-					insert, error_insert_query := connect.Query(query_insert, id_data ,email_data, hash)
+					insert, error_insert_query := connect.Query(query_insert, id_email, email_data, hash)
 					if error_insert_query != nil {
 						c.JSON(400, gin.H{"error": error_insert_query.Error()})
 						return
 					} else {
 						query_select_id := "SELECT id from user where email = ?"
-						select_id , error_select_id := connect.Query(query_select_id,email_data)
-						if error_select_id != nil{
+						select_id, error_select_id := connect.Query(query_select_id, email_data)
+						if error_select_id != nil {
 							c.JSON(400, gin.H{"error": error_select_id.Error()})
 							return
-						}else{
-							var id_post int;
+						} else {
+							var id_post string
 							if select_id.Next() {
 								if err_scan := select_id.Scan(&id_post); err_scan != nil {
 									c.JSON(400, gin.H{"error": err_scan.Error()})
 									return
-								}else{
+								} else {
 									godotenv.Load(".env")
 									key_hex := []byte(os.Getenv("LLAVE_SECRETA"))
-									token_model := models.User_build(strconv.Itoa(id_post))
+									token_model := models.User_build(id_post)
 									token := jwt.NewWithClaims(jwt.SigningMethodHS256, token_model)
 									final_token, err_token := token.SignedString(key_hex)
 									if err_token != nil {
@@ -97,10 +95,10 @@ func Registrar_Usuario(c *gin.Context) {
 						defer select_id.Close()
 					}
 					defer insert.Close()
-					
+
 				}
 			} else {
-				c.JSON(400,"El usuario ya esta registrado")
+				c.JSON(400, "El usuario ya esta registrado")
 				return
 			}
 		}

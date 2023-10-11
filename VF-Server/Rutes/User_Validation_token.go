@@ -17,7 +17,7 @@ func Validar_usuario_token(c *gin.Context) {
 	tokenString := string(c.Param("token"))
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			c.JSON(400,"Firma no valida")
+			c.JSON(400, "Firma no valida")
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 		}
 		godotenv.Load(".env")
@@ -27,14 +27,14 @@ func Validar_usuario_token(c *gin.Context) {
 	})
 
 	if err != nil {
-		c.JSON(400,gin.H{"error": err.Error()})
+		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	} else {
-		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {		
+		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 			query := "SELECT COUNT(*) AS contador FROM user WHERE id = ?"
 			rows, rows_error := connect.Query(query, claims["sub"])
 			if rows_error != nil {
-				c.JSON(400,gin.H{"error": rows_error.Error()})
+				c.JSON(400, gin.H{"error": rows_error.Error()})
 				return
 			}
 			var (
@@ -44,22 +44,21 @@ func Validar_usuario_token(c *gin.Context) {
 			for rows.Next() {
 				err_search := rows.Scan(&contador)
 				if err_search != nil {
-					c.JSON(400,gin.H{"error": err_search.Error()})
+					c.JSON(400, gin.H{"error": err_search.Error()})
 					return
 				} else {
 					if contador == 1 {
-						c.JSON(200,"Token Valido")
+						c.JSON(200, claims["sub"])
 						return
 					} else {
-						c.JSON(400,gin.H{"error": rows_error.Error()})
+						c.JSON(400, gin.H{"error": rows_error.Error()})
 						return
 					}
 				}
 			}
-		}else{
-			c.JSON(400,gin.H{"error": err.Error()})
+		} else {
+			c.JSON(400, gin.H{"error": err.Error()})
 			return
 		}
-	} 
+	}
 }
-
