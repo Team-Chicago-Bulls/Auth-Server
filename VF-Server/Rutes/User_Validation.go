@@ -37,20 +37,20 @@ func Validar_usuario(c *gin.Context) {
 		query := "SELECT * FROM user WHERE EMAIL = ?"
 		rows, err := connect.Query(query, email_data)
 		if err != nil {
-			c.JSON(400,gin.H{"error": err.Error()})
+			c.JSON(400, gin.H{"error": err.Error()})
 			return
 		}
 		var (
-			id string
+			id       string
 			email    string
 			password string
 		)
 		defer rows.Close()
 
 		for rows.Next() {
-			err_scan := rows.Scan(&id,&email, &password)
+			err_scan := rows.Scan(&id, &email, &password)
 			if err_scan != nil {
-				c.JSON(400,gin.H{"error": err_scan.Error()})
+				c.JSON(400, gin.H{"error": err_scan.Error()})
 				return
 			} else {
 				result_found = true
@@ -62,18 +62,18 @@ func Validar_usuario(c *gin.Context) {
 					token := jwt.NewWithClaims(jwt.SigningMethodHS256, token_model)
 					final_token, err_token := token.SignedString(key_hex)
 					if err_token != nil {
-						c.JSON(400,gin.H{"error": err_token.Error()})
+						c.JSON(400, gin.H{"error": err_token.Error()})
 						return
 					}
 					c.JSON(202, final_token)
 				} else {
-					c.JSON(400,gin.H{"error": erro_has.Error()})
+					c.JSON(400, "Las contraseñas no coinciden")
 					return
 				}
 			}
 		}
 		if !result_found {
-			c.JSON(400,"No se encontró el usuario")
+			c.JSON(400, "No se encontró el usuario")
 			return
 		}
 	}
