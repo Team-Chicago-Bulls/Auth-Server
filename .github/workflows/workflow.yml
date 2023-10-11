@@ -1,0 +1,62 @@
+name: Ejecución de flujos de trabajo
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy-auth-server:
+    runs-on: self-hosted
+
+    steps:
+      - name: CheckOut
+        uses: actions/checkout@v3
+
+      - name: Prepare script permissions
+        run: |
+          chmod 777 run.sh
+      - name: stop docker
+        run: |
+          docker compose down --rmi all --remove-orphans
+
+      - name: Run
+        run: ./run.sh
+
+  pull-request-sec:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Check branch name
+        id: branch-check
+        run: |
+          if [[ "${{ github.ref }}" == "refs/pull/*/merge" ]]; then
+            echo "::set-output name=external_branch::true"
+          else
+            echo "::set-output name=external_branch::false"
+          fi
+
+      - name: Request approval
+        if: steps.branch-check.outputs.external_branch == 'true'
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { data: pullRequest } = await github.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+
+            await github.pulls.requestReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              reviewers: pullRequest.requested_reviewers.map(reviewer => reviewer.login)
+            });
