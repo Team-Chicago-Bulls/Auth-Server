@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY ./VF-Server /app
 
-RUN go build -o Auth-Server
+RUN go build -ldflags="-s" -o Auth-Server
 
 EXPOSE 8050
 
