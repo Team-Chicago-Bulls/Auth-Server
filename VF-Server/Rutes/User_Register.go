@@ -5,7 +5,7 @@ import (
 	"auth-server/models"
 	"os"
 	"strconv"
-
+	"fmt"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/golang-jwt/jwt"
@@ -29,6 +29,7 @@ func Registrar_Usuario(c *gin.Context) {
 		email_data, ok1 := datos["correo"].(string)
 		password_data, ok2 := datos["contrasena"].(string)
 		id_data, ok3 := datos["id"].(string)
+		fmt.Println("ID:", id_data)
 		
 		if !ok1 || !ok2 || !ok3  {
 			c.JSON(400, gin.H{"error": "Los campos no son del tipo esperado"})
