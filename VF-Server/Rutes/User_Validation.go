@@ -65,7 +65,7 @@ func Validar_usuario(c *gin.Context) {
 						c.JSON(400, gin.H{"error": err_token.Error()})
 						return
 					}
-					c.JSON(202, in.H{"token": final_token})
+					c.JSON(202, gin.H{"token": final_token})
 				} else {
 					c.JSON(400, "Las contraseñas no coinciden")
 					return
