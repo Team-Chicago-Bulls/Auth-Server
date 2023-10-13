@@ -48,7 +48,7 @@ func Validar_usuario_token(c *gin.Context) {
 					return
 				} else {
 					if contador == 1 {
-						c.JSON(200, claims["sub"])
+						c.JSON(200, gin.H{"id":claims["sub"]})
 						return
 					} else {
 						c.JSON(400, gin.H{"error": rows_error.Error()})
