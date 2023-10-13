@@ -82,7 +82,7 @@ func Registrar_Usuario(c *gin.Context) {
 									if err_token != nil {
 										panic(err_token.Error())
 									} else {
-										c.JSON(200, final_token)
+										c.JSON(200, gin.H{"token":final_token})
 									}
 								}
 							} else {
