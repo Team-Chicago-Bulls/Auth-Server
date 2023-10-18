@@ -12,3 +12,4 @@ Dockerfile
 # Go workspace files
 /VF-Server/main.go
 
+VF-Server/testing/.env
