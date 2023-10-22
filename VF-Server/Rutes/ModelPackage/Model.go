@@ -15,9 +15,10 @@ func NewRutes() (*Funcions, error) {
 
 	r.GET("/user/prueba", Rutes.Prueba)
 	r.GET("/user/documentacion", Rutes.Documentacion)
+	r.GET("/user/identificacion/:correo", Rutes.Validar_correo_id)
+	r.GET("/user/log_user_token/:token", Rutes.Validar_usuario_token)
 	r.POST("/user/register_user", Rutes.Registrar_Usuario)
 	r.POST("/user/log_user", Rutes.Validar_usuario)
-	r.GET("/user/log_user_token/:token", Rutes.Validar_usuario_token)
 
 	return &Funcions{Router: r}, nil
 }

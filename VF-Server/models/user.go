@@ -15,8 +15,7 @@ func User_build(id_param string) *User {
 	user := &User{}
 	user.StandardClaims = jwt.StandardClaims{
 		Subject:   id_param,
-		ExpiresAt: time.Now().Add(time.Hour * 48).Unix(),
+		ExpiresAt: time.Now().AddDate(9999, 0, 0).Unix(),
 	}
 	return user
 }
-
