@@ -16,7 +16,6 @@ services:
       my_network:
         aliases:
           - db_host
-
   api:
     build: 
       context: .
