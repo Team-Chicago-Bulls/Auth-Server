@@ -11,7 +11,7 @@ services:
       - MYSQL_PASSWORD=admin*
     volumes:
       - /home/distribuidos4/db:/var/lib/mysql
-      - /home/distribuidos4/dbconf:/etc/mysql/mariadb.conf.d
+      - /home/distribuidos4/dbconf:/etc/mysql
     networks:
       my_network:
         aliases:
